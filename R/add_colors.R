@@ -15,7 +15,7 @@ add_colors <-
     color_names = 'BLUE',
     position = 3,
     colors_to_env = TRUE,
-    show_colors = TRUE
+    show_colors = FALSE
   ) {
 
     hex_codes <- stringr::str_to_upper(hex_codes)
