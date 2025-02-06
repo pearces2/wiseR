@@ -16,18 +16,17 @@ knitr::opts_chunk$set(
 # wiseR
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN status](https://www.r-pkg.org/badges/version/wiseR)](https://CRAN.R-project.org/package=wiseR)
 <!-- badges: end -->
 
-The goal of wiseR is to make workflows faster and more predictable.
+The goal of wiseR is to make analysis of different data uniform and predictable
 
 ## Installation
 
-You can install the development version of wiseR like so:
+You can install the development version of wiseR from [GitHub](https://github.com/) with:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+# install.packages("pak")
+pak::pak("pearces2/wiseR")
 ```
 
 ## Example
