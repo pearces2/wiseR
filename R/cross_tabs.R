@@ -1,41 +1,33 @@
 #' @title Generate Cross Tabs for Multiple Variables
 #' @description
-#' The `cross_tabs` function generates a proportion table for multiple variables within a dataset.
-#' It uses an internal function to generate proportion tables for each specified variable and combines them into a single data frame.
+#' Generates a proportion table for multiple variables within a dataset.
 #'
-#' @param data A data frame containing the data.
-#' @param ... One or more unquoted expressions representing the names of the variables for which the proportion tables should be generated.
-#' If no variables are specified, the function will generate proportion tables for all variables in the dataset.
+#' @param data A data frame.
+#' @param ... Variables to tabulate (supports tidyselect). If empty, selects all columns.
+#' @param digits Integer. Number of decimal places for proportions. Defaults to 2.
+#' @param na.rm Logical. Whether to remove NA values from the calculation. Defaults to TRUE.
 #'
-#' @return A data frame with the proportion tables for the specified variables.
-#'
+#' @return A tibble with summary statistics.
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#' data <- data.frame(
-#'   gender = c("male", "female", "male", "female", "female"),
-#'   age_group = c("young", "young", "old", "old", "young")
-#' )
-#' cross_tabs(data, gender, age_group)
-#' }
-cross_tabs <- function(data, ...) {
+cross_tabs <- function(data, ..., digits = 2, na.rm = TRUE) {
 
-  vars <-
-    data |>
-    select(...) |>
-    names()
+  # 1. Robust variable selection using tidyselect
+  # logic: if ... is provided, select those; otherwise take all names
+  vars_loc <- tryCatch(
+    tidyselect::eval_select(rlang::expr(c(...)), data),
+    error = function(e) integer(0)
+  )
 
-  if (length(vars) == 0) {
-    vars <-
-      data |>
-      names()
+  if (length(vars_loc) == 0) {
+    vars <- names(data)
+  } else {
+    vars <- names(vars_loc)
   }
 
-  map(
+  # 2. Iterate and combine
+  purrr::map(
     vars,
-    ~inner_fns(data, .x)
+    \(x) calc_prop_table(data, x, digits = digits, na.rm = na.rm)
   ) |>
-    list_rbind()
-
+    purrr::list_rbind()
 }

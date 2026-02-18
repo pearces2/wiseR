@@ -1,31 +1,35 @@
-# Internal function to generate proportion table for a given variable
-inner_fns <- function(data, var) {
+# Internal helper function
+calc_prop_table <- function(data, var, digits, na.rm) {
 
-  data_var_label <-
-    data |>
-    pull(.data[[var]]) |>
-    var_label()
+  # Safe label extraction (falls back to variable name if no label exists)
+  var_lab <- attr(data[[var]], "label")
+  if (is.null(var_lab)) var_lab <- var
 
-  data |>
-    count(.data[[var]],
-          .drop = FALSE) |>
-    drop_na() |>
-    rename(var_level = all_of(var)) |>
-    arrange(var_level) |>
-    add_tally(n, name = 'total') |>
-    mutate(
-      prop = round(n/total, 2),
-      var_level = var_level |> as.character(),
+  # Calculation
+  # Use .data[[var]] for count (data masking verb)
+  res <- data |>
+    dplyr::count(.data[[var]], name = "sub_n")
+
+  # Use all_of(var) for drop_na (tidyselect verb)
+  if (na.rm) {
+    res <- res |> tidyr::drop_na(dplyr::all_of(var))
+  }
+
+  res |>
+    dplyr::rename(var_level = dplyr::all_of(var)) |>
+    dplyr::mutate(
+      total_n = sum(sub_n),
+      prop = round(sub_n / total_n, digits),
       variable = var,
-      variable_label = data_var_label
+      variable_label = as.character(var_lab),
+      var_level = as.character(var_level)
     ) |>
-    select(
+    dplyr::select(
       variable,
       variable_label,
       var_level,
-      total_n = total,
-      sub_n = n,
+      total_n,
+      sub_n,
       prop
     )
-
 }

@@ -4,27 +4,20 @@
 \alias{cross_tabs}
 \title{Generate Cross Tabs for Multiple Variables}
 \usage{
-cross_tabs(data, ...)
+cross_tabs(data, ..., digits = 2, na.rm = TRUE)
 }
 \arguments{
-\item{data}{A data frame containing the data.}
+\item{data}{A data frame.}
 
-\item{...}{One or more unquoted expressions representing the names of the variables for which the proportion tables should be generated.
-If no variables are specified, the function will generate proportion tables for all variables in the dataset.}
+\item{...}{Variables to tabulate (supports tidyselect). If empty, selects all columns.}
+
+\item{digits}{Integer. Number of decimal places for proportions. Defaults to 2.}
+
+\item{na.rm}{Logical. Whether to remove NA values from the calculation. Defaults to TRUE.}
 }
 \value{
-A data frame with the proportion tables for the specified variables.
+A tibble with summary statistics.
 }
 \description{
-The \code{cross_tabs} function generates a proportion table for multiple variables within a dataset.
-It uses an internal function to generate proportion tables for each specified variable and combines them into a single data frame.
-}
-\examples{
-\dontrun{
-data <- data.frame(
-  gender = c("male", "female", "male", "female", "female"),
-  age_group = c("young", "young", "old", "old", "young")
-)
-cross_tabs(data, gender, age_group)
-}
+Generates a proportion table for multiple variables within a dataset.
 }
