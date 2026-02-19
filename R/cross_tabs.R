@@ -1,6 +1,6 @@
+
 #' @title Generate Cross Tabs for Multiple Variables
-#' @description
-#' Generates a proportion table for multiple variables within a dataset.
+#' @description Generates a proportion table for multiple variables within a dataset.
 #'
 #' @param data A data frame.
 #' @param ... Variables to tabulate (supports tidyselect). If empty, selects all columns.
@@ -12,7 +12,6 @@
 cross_tabs <- function(data, ..., digits = 2, na.rm = TRUE) {
 
   # 1. Robust variable selection using tidyselect
-  # logic: if ... is provided, select those; otherwise take all names
   vars_loc <- tryCatch(
     tidyselect::eval_select(rlang::expr(c(...)), data),
     error = function(e) integer(0)

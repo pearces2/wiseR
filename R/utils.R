@@ -1,4 +1,5 @@
-# Internal helper function
+#' @title Calculate Proportion Table for a Single Variable
+#' @description Helper function to calculate counts and proportions, preserving empty factor levels.
 calc_prop_table <- function(data, var, digits, na.rm) {
 
   # Safe label extraction (falls back to variable name if no label exists)
@@ -8,7 +9,7 @@ calc_prop_table <- function(data, var, digits, na.rm) {
   # Calculation
   # Use .data[[var]] for count (data masking verb)
   res <- data |>
-    dplyr::count(.data[[var]], name = "sub_n")
+    dplyr::count(.data[[var]], name = "sub_n", .drop = FALSE)
 
   # Use all_of(var) for drop_na (tidyselect verb)
   if (na.rm) {
